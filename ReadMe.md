@@ -11,7 +11,7 @@ Projekt został stworzony w celu demonstracji umiejętności analitycznych w śr
 | Obszar | Technologia |
 |---|---|
 | Hurtownia Danych | Google BigQuery |
-| Język | Standard SQL |
+| Język | MySQL |
 | Statystyka & ML | BigQuery ML (K-means Clustering) |
 | Automatyzacja | Python (Kaggle API, ETL process) |
 
@@ -32,7 +32,7 @@ Dla celów demonstracyjnych w repozytorium znajduje się plik [`cards_data.csv`]
 
 ### Uruchomienie
 
-Pobierz plik [`TransactionsDownload.ipynb`]('TransactionsDownload.ipynb') z repozytorium i otwórz go w **Google Colab** lub **Jupyter Notebook**.
+Pobierz plik [`TransactionsDownload.ipynb`](TransactionsDownload.ipynb) z repozytorium i otwórz go w **Google Colab** lub **Jupyter Notebook**.
 
 Alternatywnie, uruchom poniższy kod ręcznie:
 
