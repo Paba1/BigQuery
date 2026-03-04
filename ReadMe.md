@@ -179,6 +179,22 @@ FROM `project-18e188c2-2177-4abb-b5d.tpay_fraud_project.transactions`;
 
 ### Wyniki ML.PREDICT
 
+```sql
+SELECT 
+  centroid_id,
+  ROUND(AVG(credit_limit), 2) as avg_limit,
+  ROUND(AVG(num_cards_issued), 1) as avg_cards,
+  COUNT(*) as count_of_clients
+FROM ML.PREDICT(MODEL `project-18e188c2-2177-4abb-b5d.tpay_fraud_project.customer_segments`, 
+  (SELECT 
+     credit_limit, 
+     num_cards_issued, 
+     IF(has_chip, 1, 0) as chip_flag 
+   FROM `project-18e188c2-2177-4abb-b5d.tpay_fraud_project.transactions`))
+GROUP BY 1
+ORDER BY avg_limit DESC;
+```
+
 Poniższa tabela przedstawia charakterystykę zidentyfikowanych segmentów:
 
 | centroid_id | avg_limit | avg_cards | count_of_clients | Business Segment |
