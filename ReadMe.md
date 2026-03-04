@@ -16,6 +16,62 @@ Projekt został stworzony w celu demonstracji umiejętności analitycznych w śr
 | Automatyzacja | Python (Kaggle API, ETL process) |
 
 ---
+---
+
+## ⚙️ ETL — Ładowanie Danych do BigQuery
+
+### Źródło danych
+
+Projekt korzysta z publicznego datasetu dostępnego na Kaggle:
+
+🔗 **[Transactions Fraud Datasets – Kaggle](https://www.kaggle.com/datasets/computingvictor/transactions-fraud-datasets)**
+
+Dla celów demonstracyjnych w repozytorium znajduje się plik [`cards_data.csv`](cards_data.csv) z przykładowymi danymi produkcyjnymi.
+
+---
+
+### Uruchomienie
+
+Pobierz plik [`TransactionsDownload.ipynb`]('TransactionsDownload.ipynb') z repozytorium i otwórz go w **Google Colab** lub **Jupyter Notebook**.
+
+Alternatywnie, uruchom poniższy kod ręcznie:
+
+**Krok 1 — Instalacja bibliotek:**
+```python
+!pip install kagglehub pandas-gbq
+```
+
+**Krok 2 — Pobranie danych i załadowanie do BigQuery:**
+```python
+import kagglehub
+import pandas as pd
+import os
+from google.colab import auth
+from google.cloud import bigquery
+
+# 1. EXTRACT — autoryzacja i pobranie danych z Kaggle
+auth.authenticate_user()
+path = kagglehub.dataset_download("computingvictor/transactions-fraud-datasets")
+df = pd.read_csv(os.path.join(path, 'transactions_data.csv'))
+
+# 2. TRANSFORM — normalizacja nazw kolumn
+df.columns = [c.replace('.', '_').replace(' ', '_') for c in df.columns]
+
+# 3. LOAD — upload do BigQuery
+project_id = 'TWOJ-PROJECT-ID'  # <- zmień na swój
+dataset_id = 'tpay_fraud_project'
+table_id   = f"{project_id}.{dataset_id}.transactions"
+
+client = bigquery.Client(project=project_id)
+client.create_dataset(bigquery.Dataset(f"{project_id}.{dataset_id}"), exists_ok=True)
+
+df.to_gbq(table_id, project_id=project_id, if_exists='replace', use_bqstorage_api=True)
+print(f"✅ Dane załadowane do: {table_id}")
+```
+
+> ⚠️ Wymagane: konto Google Cloud z aktywnym projektem i włączonym **BigQuery API**.
+
+
 
 ## 📊 Analiza SQL
 
